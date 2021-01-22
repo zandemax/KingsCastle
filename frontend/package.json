@@ -1,6 +1,7 @@
 {
-  "name": "Kingscastle.io",
+  "name": "kingscastle.io",
   "version": "0.1.0",
+  "description": "Frontend for the kingscastle.io game",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

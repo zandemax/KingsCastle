@@ -72,10 +72,10 @@ export default new Vuex.Store({
     setError(context, payload) {
       context.commit('SET_ERROR', payload);
     },
-    initSession(context, payload) {
+    session_init(context, payload) {
       context.commit('SET_SESSION', payload);
     },
-    addTurn(context, payload) {
+    session_update(context, payload) {
       context.commit('ADD_TURN', payload);
     },
     connect(context) {
@@ -84,10 +84,17 @@ export default new Vuex.Store({
     disconnect(context) {
       context.commit('SET_CONNECTED', false);
     },
-    setSpectators(context, payload) {
+    session_spectate(context, payload) {
+      if (payload.spectators.some((spectator) => spectator.userId === this.userId)) {
+        context.commit('SET_SESSION', payload);
+      } else {
+        context.commit('SET_SPECTATORS', payload.spectators);
+      }
+    },
+    spectator_leave(context, payload) {
       context.commit('SET_SPECTATORS', payload);
     },
-    setWinner(context, payload) {
+    session_end(context, payload) {
       context.commit('SET_WINNER', payload);
     },
     clearState(context) {

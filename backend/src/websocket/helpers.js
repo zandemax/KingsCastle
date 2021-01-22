@@ -3,15 +3,8 @@ const getUnixTime = () => {
 }
 
 const randomString = (length = 5) => {
-  // Declare all characters
-  let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  // Pick characers randomly
-  let str = '';
-  for (let i = 0; i < length; i++) {
-      str += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return str;
+  // Generate random number, turn into string with base 34, then pick length characters after the dot.
+  return Math.random().toString(34).substr(2,2+length);
 };
 
 const hashMapToList = (dotHashMap) => {

@@ -133,7 +133,7 @@ const join = (data, connection) => {
 
   // Join a random session
   const unoccupiedSessionKey = Object.keys(sessions).find(
-    (sessionKey) => sessions[sessionKey].userB === null
+    (sessionKey) => sessions[sessionKey].hasUserB()
       && !sessions[sessionKey].private,
   );
 

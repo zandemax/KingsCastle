@@ -1,11 +1,6 @@
 const sendCommand = (socket, method, data = null) => {
-  if (data === null) {
-    socket.send(method);
-  } else {
-    const message = {};
-    message[method] = data;
-    socket.sendObj(message);
-  }
+  const message = { method, data };
+  socket.sendObj(message);
 };
 
 const sendJoin = (socket, data) => {
@@ -33,41 +28,25 @@ const sendTurn = (socket, data) => {
 };
 
 const onResponse = (route, socket, store, router, response) => {
-  const data = JSON.parse(response.data);
-  if (data.method === 'SESSION_INIT') {
-    store.dispatch('initSession', data.payload);
-    router.push({ name: 'Session', query: { sid: data.payload.sessionId } });
-  }
-  if (data.method === 'SESSION_SPECTATE') {
-    if (data.payload.spectators.some((spectator) => spectator.userId === store.getters.userId)) {
-      store.dispatch('initSession', data.payload);
-      router.push({ name: 'Session', query: { sid: data.payload.sessionId } });
-    } else {
-      store.dispatch('setSpectators', data.payload.spectators);
-    }
-  }
-  if (data.method === 'SPECTATOR_LEAVE') {
-    store.dispatch('setSpectators', data.payload);
-  }
-  if (data.method === 'SESSION_UPDATE') {
-    store.dispatch('addTurn', data.payload);
-  }
-  if (data.method === 'SESSION_END') {
-    store.dispatch('setWinner', data.payload);
-  }
-  if (data.method === 'CONNECT') {
-    store.dispatch('connect');
-    if (route.name === 'Session' && store.getters.joined) {
-      console.log('Reconnect');
-      sendCommand(
-        socket,
-        'CONNECT',
-        { userId: store.getters.userId },
-      );
-    }
-  }
-  if (data.method === 'DISCONNECT') {
-    store.dispatch('disconnect');
+  const message = JSON.parse(response.data);
+  store.dispatch(message.method.toLowerCase(), message.data);
+  switch (message.method) {
+    case 'SESSION_INIT':
+      router.push({ name: 'Session', query: { sid: message.data.sessionId } });
+      break;
+    case 'SESSION_SPECTATE':
+      if (message.data.spectators.some((spectator) => spectator.userId === store.getters.userId)) {
+        router.push({ name: 'Session', query: { sid: message.data.sessionId } });
+      }
+      break;
+    case 'CONNECT':
+      if (route.name === 'Session' && store.getters.joined) {
+        console.log('Reconnect');
+        sendCommand(socket, 'CONNECT', { userId: store.getters.userId });
+      }
+      break;
+    default:
+      console.log(`Unknown command: ${message.method}`);
   }
 };
 

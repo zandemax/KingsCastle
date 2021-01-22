@@ -1,15 +1,15 @@
 {
-  "name": "080_node_chat",
+  "name": "kingscastle.io",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend for the kingscastle.io game",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "build": "webpack && cp -R ./src/public ./build/public && cd ./build",
     "dev": "webpack && cp -R ./src/public ./build/public && cd ./build && node bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@babel/preset-env": "^7.9.6",
     "nodemailer": "^6.4.17",
